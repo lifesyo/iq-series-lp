@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="index,follow">
+<meta name="description" content="動く作戦板、試合スタッツ、映像へのタグ付け。中学女子バスケの現場で毎日使うために作られた3つの指導支援アプリ。月額980円で3本とも使えます。">
+<title>IQ Series｜中学女子バスケの指導支援アプリ</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;600;700&display=swap">
+<style>
+  :root{
+    --ground:#F1F2F5;
+    --surface:#FFFFFF;
+    --surface-2:#E9EBF0;
+    --ink:#161A21;
+    --ink-2:#4A515E;
+    --ink-3:#7A8290;
+    --line:#D6DAE2;
+    --blue:#1B3A6B;      /* 判断 */
+    --blue-soft:#2F5D9E;
+    --orange:#D9701F;    /* 認知 */
+    --purple:#6B4A9E;    /* 選択 */
+    --pink:#C2497E;      /* 実行 */
+    --green:#2E7D5B;
+    --shadow:0 1px 2px rgba(22,26,33,.06), 0 8px 24px rgba(22,26,33,.06);
+    --maxw:1080px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --ground:#0F131A;
+      --surface:#161C25;
+      --surface-2:#1E2632;
+      --ink:#E9EDF3;
+      --ink-2:#AAB4C2;
+      --ink-3:#7C8797;
+      --line:#2A3441;
+      --blue:#7FA8E8;
+      --blue-soft:#5E8CD4;
+      --orange:#E8975A;
+      --purple:#A98FDC;
+      --pink:#E087B1;
+      --green:#5DBE92;
+      --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0F131A;
+    --surface:#161C25;
+    --surface-2:#1E2632;
+    --ink:#E9EDF3;
+    --ink-2:#AAB4C2;
+    --ink-3:#7C8797;
+    --line:#2A3441;
+    --blue:#7FA8E8;
+    --blue-soft:#5E8CD4;
+    --orange:#E8975A;
+    --purple:#A98FDC;
+    --pink:#E087B1;
+    --green:#5DBE92;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--ground); color:var(--ink);
+    font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
+    font-size:16px; line-height:1.85; letter-spacing:.01em;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:var(--maxw); margin:0 auto; padding-inline:20px}
+  section{padding-block:clamp(56px,8vw,96px)}
+  a{color:inherit}
+  h1,h2,h3{text-wrap:balance; margin:0}
+  .mono{font-family:"Barlow Condensed","Barlow",sans-serif; letter-spacing:.08em; text-transform:uppercase}
+  .eyebrow{
+    font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:13px;
+    letter-spacing:.22em; text-transform:uppercase; color:var(--blue-soft);
+  }
+
+  /* ---------- hero ---------- */
+  .hero{position:relative; overflow:hidden; padding-block:clamp(56px,9vw,104px) clamp(48px,7vw,80px)}
+  .courtlines{position:absolute; inset:0; width:100%; height:100%; pointer-events:none; opacity:.5}
+  .hero .wrap{position:relative}
+  .mark{display:flex; align-items:baseline; gap:10px; margin-bottom:34px}
+  .mark .a{font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:30px; letter-spacing:.06em; color:var(--blue)}
+  .mark .b{font-family:"Barlow Condensed",sans-serif; font-weight:500; font-size:15px; letter-spacing:.3em; text-transform:uppercase; color:var(--ink-3)}
+  h1{
+    font-size:clamp(32px,6.2vw,58px); font-weight:900; line-height:1.28;
+    letter-spacing:-.01em; margin-bottom:22px;
+  }
+  h1 .hl{color:var(--orange)}
+  .lede{font-size:clamp(15px,1.7vw,18px); color:var(--ink-2); max-width:34em; margin-bottom:34px}
+  .cta{display:flex; gap:12px; flex-wrap:wrap; align-items:center}
+  .btn{
+    display:inline-flex; align-items:center; gap:9px; padding:13px 24px; border-radius:999px;
+    font-weight:700; font-size:15px; text-decoration:none; border:1.5px solid transparent;
+    transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover{transform:translateY(-1px)}
+  .btn-a{background:var(--blue); color:#fff; box-shadow:var(--shadow)}
+  :root[data-theme="dark"] .btn-a, :root:not([data-theme="light"]) .btn-a{color:#0F131A}
+  @media (prefers-color-scheme: light){:root:not([data-theme="dark"]) .btn-a{color:#fff}}
+  .btn-b{border-color:var(--line); color:var(--ink); background:var(--surface)}
+  .cta-note{font-size:13px; color:var(--ink-3); width:100%; margin-top:4px}
+
+  /* ---------- pains ---------- */
+  .pains{display:grid; grid-template-columns:repeat(3,1fr); gap:0; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+  .pain{padding:26px 24px 26px 0; border-right:1px solid var(--line)}
+  .pain:last-child{border-right:0; padding-right:0}
+  .pain:not(:first-child){padding-left:24px}
+  .pain p{margin:0; font-size:15px; color:var(--ink-2)}
+  .pain strong{display:block; color:var(--ink); font-size:16px; font-weight:700; margin-bottom:4px}
+  @media (max-width:760px){
+    .pains{grid-template-columns:1fr}
+    .pain{border-right:0; border-bottom:1px solid var(--line); padding:20px 0}
+    .pain:not(:first-child){padding-left:0}
+    .pain:last-child{border-bottom:0}
+  }
+
+  /* ---------- section head ---------- */
+  .shead{margin-bottom:38px}
+  .shead h2{font-size:clamp(24px,3.4vw,34px); font-weight:900; line-height:1.4; margin:10px 0 12px}
+  .shead p{margin:0; color:var(--ink-2); max-width:40em; font-size:15px}
+
+  /* ---------- apps ---------- */
+  .tierlabel{
+    display:flex; align-items:center; gap:12px; margin:0 0 18px;
+    font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:14px; letter-spacing:.18em; text-transform:uppercase;
+  }
+  .tierlabel::after{content:""; flex:1; height:1px; background:var(--line)}
+  .free .tierlabel{color:var(--green)}
+  .paid .tierlabel{color:var(--blue-soft)}
+
+  .grid2{display:grid; grid-template-columns:repeat(2,1fr); gap:14px}
+  .grid3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+  @media (max-width:820px){.grid3{grid-template-columns:1fr}.grid2{grid-template-columns:1fr}}
+
+  .app{
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:22px 22px 20px; display:flex; flex-direction:column; gap:10px;
+  }
+  .app.lite{background:transparent; border-style:dashed}
+  .app h3{font-size:19px; font-weight:900; display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+  .app h3 .en{font-family:"Barlow Condensed",sans-serif; font-weight:600; font-size:13px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3)}
+  .app p{margin:0; font-size:14.5px; color:var(--ink-2); flex:1}
+  .feat{list-style:none; margin:2px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:6px}
+  .feat li{font-size:12.5px; color:var(--ink-2); background:var(--surface-2); border-radius:6px; padding:3px 9px}
+  .applink{font-size:13.5px; font-weight:700; color:var(--blue-soft); text-decoration:none; margin-top:2px}
+  .applink:hover{text-decoration:underline}
+  .addon{
+    margin-top:12px; padding:12px 14px; border-left:3px solid var(--purple);
+    background:var(--surface-2); border-radius:0 8px 8px 0; font-size:13.5px; color:var(--ink-2);
+  }
+  .addon b{color:var(--ink)}
+
+  /* ---------- framework ---------- */
+  .fw{background:var(--surface); border-radius:18px; padding:clamp(24px,4vw,40px); border:1px solid var(--line)}
+  .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:26px}
+  @media (max-width:760px){.steps{grid-template-columns:repeat(2,1fr)}}
+  .step{padding-top:14px; border-top:4px solid var(--c)}
+  .step .jp{font-size:19px; font-weight:900; color:var(--c); line-height:1.4}
+  .step .en{font-family:"Barlow Condensed",sans-serif; font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--ink-3)}
+  .step p{margin:6px 0 0; font-size:13.5px; color:var(--ink-2)}
+
+  /* ---------- pricing ---------- */
+  .plans{display:grid; grid-template-columns:1fr 1.25fr; gap:16px; align-items:start}
+  .plans.single{grid-template-columns:minmax(0,560px); justify-content:center}
+  @media (max-width:820px){.plans{grid-template-columns:1fr}}
+  .plan{background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:26px}
+  .plan.main{border:2px solid var(--blue); box-shadow:var(--shadow)}
+  .plan .pname{font-weight:900; font-size:18px; margin-bottom:6px}
+  .plan .ptag{font-size:13px; color:var(--ink-3); margin-bottom:18px}
+  .price{display:flex; align-items:baseline; gap:6px; font-family:"Barlow",sans-serif; font-variant-numeric:tabular-nums}
+  .price .n{font-size:44px; font-weight:700; letter-spacing:-.02em; line-height:1}
+  .price .u{font-size:15px; color:var(--ink-2); font-family:"Zen Kaku Gothic New",sans-serif}
+  .price-sub{font-size:13.5px; color:var(--ink-2); margin-top:8px}
+  .plist{list-style:none; margin:20px 0 0; padding:0; display:flex; flex-direction:column; gap:9px}
+  .plist li{font-size:14.5px; color:var(--ink-2); padding-left:22px; position:relative}
+  .plist li::before{content:"–"; position:absolute; left:6px; color:var(--blue-soft); font-weight:700}
+  .legacy{margin-top:18px; font-size:13px; color:var(--ink-2); background:var(--surface-2); padding:12px 14px; border-radius:10px}
+  .legacy b{color:var(--ink)}
+
+  /* ---------- maker ---------- */
+  .maker{display:grid; grid-template-columns:1fr 1fr; gap:clamp(20px,4vw,48px); align-items:start}
+  @media (max-width:820px){.maker{grid-template-columns:1fr}}
+  .maker p{color:var(--ink-2); font-size:15px; margin:0 0 14px}
+  .facts{display:flex; flex-direction:column; gap:0; border-top:1px solid var(--line)}
+  .fact{display:flex; justify-content:space-between; gap:16px; padding:13px 0; border-bottom:1px solid var(--line); font-size:14px}
+  .fact .k{color:var(--ink-3)}
+  .fact .v{font-weight:700; text-align:right}
+
+  /* ---------- steps to start ---------- */
+  .flow{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; counter-reset:f}
+  @media (max-width:760px){.flow{grid-template-columns:1fr}}
+  .fstep{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:20px}
+  .fstep .num{font-family:"Barlow Condensed",sans-serif; font-weight:700; font-size:13px; letter-spacing:.2em; color:var(--orange)}
+  .fstep h3{font-size:16px; font-weight:700; margin:6px 0 6px}
+  .fstep p{margin:0; font-size:14px; color:var(--ink-2)}
+
+  /* ---------- footer ---------- */
+  footer{border-top:1px solid var(--line); padding-block:36px 44px; color:var(--ink-3); font-size:13.5px}
+  .flinks{display:flex; flex-wrap:wrap; gap:8px 22px; margin-bottom:18px}
+  .flinks a{text-decoration:none; color:var(--ink-2)}
+  .flinks a:hover{text-decoration:underline}
+  .flinks span{color:var(--ink-3)}
+  a:focus-visible,.btn:focus-visible{outline:2px solid var(--orange); outline-offset:3px; border-radius:6px}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <svg class="courtlines" viewBox="0 0 1200 520" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke-width="2" opacity="0.30">
+      <path d="M-20 60 H1220" stroke="var(--blue)"/>
+      <path d="M-20 470 H1220" stroke="var(--blue)"/>
+      <path d="M600 60 V470" stroke="var(--blue)"/>
+      <circle cx="600" cy="265" r="86" stroke="var(--blue)"/>
+      <path d="M120 170 H300 V360 H120" stroke="var(--orange)"/>
+      <path d="M1080 170 H900 V360 H1080" stroke="var(--orange)"/>
+      <path d="M-20 120 A 250 250 0 0 1 -20 410" stroke="var(--pink)"/>
+      <path d="M1220 120 A 250 250 0 0 0 1220 410" stroke="var(--pink)"/>
+      <path d="M60 30 H1140" stroke="var(--purple)" opacity="0.7"/>
+      <path d="M60 500 H1140" stroke="var(--purple)" opacity="0.7"/>
+    </g>
+  </svg>
+
+  <div class="wrap">
+    <div class="mark">
+      <span class="a">IQ SERIES</span>
+      <span class="b">Basketball Coaching Tools</span>
+    </div>
+    <h1>顧問の時間を、<br><span class="hl">コート</span>に戻す。</h1>
+    <p class="lede">動く作戦板、試合スタッツ、映像へのタグ付け。中学女子バスケの現場で毎日使うために作られた3つの道具です。準備と振り返りに消えていた時間を、選手を見る時間に変えます。</p>
+    <div class="cta">
+      <a class="btn btn-a" href="https://draw-iq-iota.vercel.app">14日間、無料でためす</a>
+      <a class="btn btn-b" href="#pricing">料金を見る</a>
+      <span class="cta-note">Googleアカウントだけで始められます。トライアル中の解約に費用はかかりません。</span>
+    </div>
+  </div>
+</header>
+
+<section style="padding-block:0">
+  <div class="wrap">
+    <div class="pains">
+      <div class="pain"><p><strong>ホワイトボードでは伝わらない</strong>動きのあるプレーを、止まった図で説明しきれない。</p></div>
+      <div class="pain"><p><strong>記録が紙のまま埋もれる</strong>スコアもノートも集めたきり、次の練習に返せていない。</p></div>
+      <div class="pain"><p><strong>映像を見返せない</strong>撮ってはいるけれど、60分を通しで見る時間はどこにもない。</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Three tools</div>
+      <h2>描く、記録する、見返す。その3つだけに絞りました</h2>
+      <p>使い始めるのは1本からで構いません。3本とも同じ月額に含まれているので、必要になった順に足していけます。</p>
+    </div>
+
+    <div class="paid">
+      <div class="grid3">
+        <article class="app">
+          <h3>Draw IQ <span class="en">Strategy Board</span></h3>
+          <p>動く作戦板。フレームを並べてプレーをアニメーションにし、リンクで選手に共有できます。動画とPDFでの書き出しにも対応。</p>
+          <ul class="feat"><li>アニメーション</li><li>テンプレート</li><li>共有リンク</li><li>動画・PDF書き出し</li></ul>
+          <a class="applink" href="https://draw-iq-iota.vercel.app">Draw IQ を開く →</a>
+        </article>
+        <article class="app">
+          <h3>Stat IQ <span class="en">Stats Tracker</span></h3>
+          <p>iPadで試合中に打てるスタッツ。14ゾーンのヒートマップ、選手ごとの累計とランキング、試合後のPDF出力まで。オフラインでも記録できます。</p>
+          <ul class="feat"><li>14ゾーン ヒートマップ</li><li>累計スタッツ</li><li>PDF出力</li><li>オフライン対応</li></ul>
+          <a class="applink" href="https://stat-iq.vercel.app">Stat IQ を開く →</a>
+        </article>
+        <article class="app">
+          <h3>Play IQ <span class="en">Video Tagging</span></h3>
+          <p>試合映像にタグを打って、見たい場面だけを並べて再生。選手ごとの割り当てや、複数試合をまたいだ一覧にも対応します。</p>
+          <ul class="feat"><li>タグ付け</li><li>プレイリスト再生</li><li>選手別の割り当て</li><li>試合横断の一覧</li></ul>
+          <a class="applink" href="https://play-iq.vercel.app">Play IQ を開く →</a>
+        </article>
+      </div>
+      <div class="addon">3つとも、ひとつの月額に含まれます。<b>どれか1本だけを選ぶ必要はありません。</b></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="fw">
+      <div class="eyebrow">Framework</div>
+      <h2 style="font-size:clamp(22px,3.2vw,30px); font-weight:900; margin:10px 0 14px">全部のアプリが、ひとつの指導観でつながっています</h2>
+      <p style="margin:0; color:var(--ink-2); max-width:44em; font-size:15px">がむしゃらさではなく、考えて動けるチームを作る。そのために、記録も、作戦も、振り返りも、同じ4段階で扱います。バラバラのツールを寄せ集めるのとは、ここが違います。</p>
+      <div class="steps">
+        <div class="step" style="--c:var(--orange)"><div class="en">Perception</div><div class="jp">認知</div><p>何が起きているかを見る。スタッツとヒートマップが、見えていなかったものを可視化します。</p></div>
+        <div class="step" style="--c:var(--blue)"><div class="en">Judgment</div><div class="jp">判断</div><p>その状況をどう読むか。映像のタグ付けで、同じ場面を並べて比べられます。</p></div>
+        <div class="step" style="--c:var(--purple)"><div class="en">Selection</div><div class="jp">選択</div><p>どの手を選ぶか。作戦板で選択肢を描き、選手と言葉を揃えます。</p></div>
+        <div class="step" style="--c:var(--pink)"><div class="en">Execution</div><div class="jp">実行</div><p>やり切れたか。次の試合の記録に返して、変化を数字で確かめます。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Pricing</div>
+      <h2>迷わないように、プランはひとつだけ</h2>
+      <p>アプリごとに買うものを選ぶ必要はありません。3つとも、ひとつの月額に含まれています。</p>
+    </div>
+    <div class="plans single">
+      <div class="plan main">
+        <div class="pname">IQ Series</div>
+        <div class="ptag">3つのアプリを、まとめて</div>
+        <div class="price"><span class="n">980</span><span class="u">円 / 月</span></div>
+        <div class="price-sub">年払いなら 9,800円（2か月ぶん、おトクになります）</div>
+        <ul class="plist">
+          <li>Draw IQ ― 動く作戦板、共有リンク、動画・PDF書き出し</li>
+          <li>Stat IQ ― 試合スタッツ、ヒートマップ、PDF出力</li>
+          <li>Play IQ ― 映像タグ付けとクリップ再生</li>
+          <li>チームと選手の登録数に上限はありません</li>
+          <li>最初の14日間は無料。期間中の解約に費用はかかりません</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">How to start</div>
+      <h2>使い始めるまで、3つ</h2>
+    </div>
+    <div class="flow">
+      <div class="fstep"><div class="num">STEP 01</div><h3>Googleでログイン</h3><p>アプリのインストールは不要です。スマホでもiPadでも、ブラウザからそのまま開けます。</p></div>
+      <div class="fstep"><div class="num">STEP 02</div><h3>チームと選手を登録</h3><p>背番号と呼び名を入れるだけ。ここまでで、記録を取り始められます。</p></div>
+      <div class="fstep"><div class="num">STEP 03</div><h3>次の練習から使う</h3><p>まずは作戦板を1枚描くところから。14日間は無料で、全機能をためせます。</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="shead">
+      <div class="eyebrow">Who made this</div>
+      <h2>現場の顧問が、自分のチームのために作りました</h2>
+    </div>
+    <div class="maker">
+      <div>
+        <p>IQ Series は、受託開発でも企画会議でもなく、中学校女子バスケットボール部の指導現場から生まれました。開発者自身が毎日コートに立ち、自分のチームの練習と試合で使いながら作り直しています。</p>
+        <p>だから機能の粒度が現場寄りです。試合中に片手で押せること、体育館のWi-Fiが切れても記録が消えないこと、印刷して保護者に渡せること。実際に困ったところから足された機能ばかりです。</p>
+        <p>スタッツも飾りではありません。自チームの記録を積み上げ、プレスをかけられた局面でターンオーバーが増えること、第4クォーターに得点が伸びないことといった課題を実際に洗い出してきました。その作業で必要になったものが、そのまま機能になっています。</p>
+      </div>
+      <div class="facts">
+        <div class="fact"><span class="k">開発・運営</span><span class="v">中学校女子バスケットボール部 指導者</span></div>
+        <div class="fact"><span class="k">競技歴</span><span class="v">中学〜大学 10年</span></div>
+        <div class="fact"><span class="k">想定している現場</span><span class="v">中学部活 / ミニバス / 高校・クラブ</span></div>
+        <div class="fact"><span class="k">アプリの形式</span><span class="v">ブラウザで動くPWA</span></div>
+        <div class="fact"><span class="k">データの保存先</span><span class="v">Google ログインに紐づくクラウド</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="mark" style="margin-bottom:20px">
+      <span class="a" style="font-size:22px">IQ SERIES</span>
+    </div>
+    <div class="flinks">
+      <a href="#pricing">料金</a>
+      <a href="https://draw-iq-iota.vercel.app">Draw IQ</a>
+      <a href="https://stat-iq.vercel.app">Stat IQ</a>
+      <a href="https://play-iq.vercel.app">Play IQ</a>
+    </div>
+    <div class="flinks">
+      <a href="terms.html">利用規約</a>
+      <a href="privacy.html">プライバシーポリシー</a>
+      <a href="tokushoho.html">特定商取引法に基づく表記</a>
+      <a href="mailto:lifesyo4030@gmail.com">お問い合わせ</a>
+    </div>
+    <p style="margin:0">© IQ Series</p>
+  </div>
+</footer>
+</body>
+</html>
